@@ -1,0 +1,357 @@
+%/*************************************************************************
+% *
+% * FILE  basicusage.tex
+% * $Id: basicusage.tex,v 1.12 2001/09/22 20:38:15 tlr Exp $
+% *
+% * DESCRIPTION 
+% *   The basic usage chapter.
+% *
+% * This file is part of ztracker - a tracker-style MIDI sequencer.
+% *
+% * Copyright (c) 2001, Daniel Kahlin <tlr@users.sourceforge.net>
+% * All rights reserved.
+% *
+% * Redistribution and use in source and binary forms, with or without
+% * modification, are permitted provided that the following conditions
+% * are met:
+% * 1. Redistributions of source code must retain the above copyright
+% *    notice, this list of conditions and the following disclaimer.
+% * 2. Redistributions in binary form must reproduce the above copyright
+% *    notice, this list of conditions and the following disclaimer in the
+% *    documentation and/or other materials provided with the distribution.
+% * 3. Neither the names of the copyright holders nor the names of their
+% *    contributors may be used to endorse or promote products derived 
+% *    from this software without specific prior written permission.
+% *
+% * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% * ``AS IS´´ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+% * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR
+% * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+% * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+% * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+% * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+% * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+% * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+% * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+% *
+% ******/
+\chapter{Basic Usage}
+%\begin{figure}
+%\includegraphics[width=10cm]{pics/patterneditor.png}
+%\end{figure}
+
+\section{The Pattern Editor}
+Pressing \key{F2} bring up the pattern editor.
+Let's begin by a showing a row in the pattern editor set to \emph{View mode:~Big}\ldots{}
+\begin{verbatim}
+E-2 00 7F 024 W2000
+\end{verbatim}
+\begin{itemize}
+\item [\texttt{E-2}] is the note itself.  In this case an E played in octave 2.
+\item [\texttt{00}] is the instrument number.
+\item [\texttt{7F}] is the velocity of this note.
+\item [\texttt{024}] is the length of the note in subticks.
+\item [\pc{W2000}] is a \emph{player command}. This particular command sets the
+pitch bend to the center position.
+\end{itemize}
+The same row looks like this in \emph{View mode:~Regular}\ldots{}
+\begin{verbatim}
+E-2 00 7F 024
+\end{verbatim}
+\ldots{}like this in \emph{View mode:~FX}\ldots{}
+\begin{verbatim}
+E-2 7F W2000
+\end{verbatim}
+\ldots{}and like this in \emph{View mode:~Squish}
+\begin{verbatim}
+E-2 7F
+\end{verbatim}
+
+\section{Player Commands}
+
+\subsubsection{Command \pc{A..xx}}
+The player command \pc{A..xx} will set the ticks per beat value to \pc{xx},
+where \pc{xx} is the tpb value in hexadecimal numbers.
+The only allowed tpb values are 2 (\pc{02}), 4 (\pc{04}), 6 (\pc{06}), 8 (\pc{08}),
+12 (\pc{0C}), 24 (\pc{18}) and 48 (\pc{30}).
+
+\subsubsection{Command \pc{C..xx}}
+When the player command \pc{C..xx} is encountered, the next tick the player
+will skip to the next pattern in queue from row \pc{xx}, where \pc{xx} is the
+row in hexadecimal numbers.
+
+\subsubsection{Command \pc{D..xx}}
+The player command \pc{D..xx} delays the current note, volume or note cut with
+\pc{xx} subticks, where \pc{xx} is the number of subticks in hexadecimal
+numbers.
+
+\subsubsection{Command \pc{Exxxx}}
+The player command \pc{Exxxx} makes a pitch slide down.  The pitch bend value
+is decremented by \pc{xxxx} every subtick.  \pc{E0000} repeats the parameter
+from the pitch slide on the previous row.
+
+\subsubsection{Command \pc{Fxxxx}}
+The player command \pc{Fxxxx} makes a pitch slide up.  The pitch bend value is
+incremented by \pc{xxxx} every subtick.  \pc{F0000} repeats the parameter from
+the pitch slide on the previous row.
+
+\subsubsection{Command \pc{P....}}
+The player command \pc{P....} will send a MIDI program change message corresponding
+to the settings in the current instrument.
+
+\subsubsection{Command \pc{Q..xx}}
+The player command \pc{Q..xx} will retrigger the note once every \pc{xx} subticks.
+
+\subsubsection{Command \pc{R..xx}}
+The player command \pc{R..xx} will start the arpeggio \pc{xx}.  If \pc{xx} is \pc{00}
+the last started arpeggio will be continued.
+
+\subsubsection{Command \pc{Sxxyy}}
+The player command \pc{Sxxyy} sets the MIDI continuous controller \pc{xx} to
+the value \pc{yy}, where \pc{xx} and \pc{yy} are hexadecimal numbers.  If
+\pc{xx} or \pc{yy} are \pc{80} their respective last used values will be used
+again.
+
+\subsubsection{Command \pc{T..xx}}
+The player command \pc{T..xx} will set the tempo to \pc{xx}, where \pc{xx} is
+the tempo in hexadecimal numbers.  The minimum allowed tempo is 60 bpm
+(\pc{3C}), and the maximum tempo is 240 bpm (\pc{F0}).
+
+\subsubsection{Command \pc{Wxxxx}}
+The player command \pc{Wxxxx} sets the pitch bend to \pc{xxxx}, where \pc{xxxx}
+is the desired value in hexadecimal numbers.  \pc{W0000} is maximum down,
+\pc{W3FFF} is maximum up, and \pc{W2000} is the center position.  \pc{W2000}
+is typically used to reset the pitch bend after a pitch slide command.
+
+\subsubsection{Command \pc{X..xx}}
+The player command \pc{X..xx} will set panning to \pc{xx}, where \pc{xx} is
+the panning in hexadecimal numbers.  \pc{00} is far left, \pc{7F} is far
+right, and \pc{40} is center. (this command does the same as \pc{S0Axx})
+
+\subsubsection{Command \pc{Zxxyy}}
+The player command \pc{Zxxyy} will send the midimacro \pc{xx}, with the optional
+parameter \pc{yy}.  If \pc{xx} is \pc{00} the last used midimacro will be used again.
+If \pc{yy} is \pc{00} the last used value will be used again.
+
+\begin{table}
+\newlength{\pcwidth}
+\settowidth{\pcwidth}{\pc{Xxxxx}}
+\begin{tablist}{\pcwidth}
+\hline
+\pc{A..xx} & Set TPB (ticks per beat) \\
+
+\pc{Cxxxx} & Pattern break - setting the \pc{C} marker denotes the end of a 
+         pattern.  ex: \pc{C0000} will skip to the next pattern, row 0 \\
+ 
+\pc{D..xx} & Delay note/volume/cut - by \pc{xxxx} sub-ticks. \\
+ 
+\pc{Exxxx} & Pitch slide down, \pc{E0000} will repeat the last portamento command. \\
+ 
+\pc{Fxxxx} & Pitch slide up, \pc{F0000} will repeat the last portamento down command. \\
+ 
+\pc{P....} & Send program change message for the current instrument. \\
+ 
+\pc{Q..xx} & Retrig note every \pc{xx} subticks \\
+ 
+\pc{R..xx} & Start arpeggio \pc{xx}.  \pc{R0000} will continue the last arpeggio \\
+
+\pc{Sxxyy} & \pc{xx} is the CC (Continuous Controller) number, \pc{yy} is the value
+             (\pc{00}-\pc{80}).  ex. \pc{S0142} will set CC \pc{01} (Mod Wheel) to a
+             value of \pc{42}.  $>=$\pc{80} sends last value \\
+ 
+\pc{T..xx} & Set tempo to \pc{xx} bpm \\
+ 
+\pc{Wxxxx} & Absolute pitch set, between \pc{0000} and \pc{3FFF}, \pc{2000} is no pitch change, 
+         \pc{0000} is max down, \pc{3FFF} is max up  \\
+ 
+\pc{X..xx} & Set panning, \pc{00}=left, \pc{40}=center, \pc{7F}=right \\
+
+\pc{Zxxyy} & Send midimacro \pc{xx} with parameter \pc{yy}.
+             \pc{00} repeats the last used value \\
+
+\hline
+\end{tablist}
+\caption[Player Commands]{Player Commands}
+\end{table}
+
+\section{Keyboard Shortcuts}
+These are the key commands.  Note that name of the keys is from an american keyboard layout,
+but it is their position that counts.  I.e some key names are different if you have a
+keyboard layout of another country.
+
+\newlength{\keywidth}
+\setlength{\keywidth}{3cm}
+
+\subsection{Pattern Editing Keys}
+\begin{tablist}{\keywidth}
+\hline
+\key{Space}      & Turns Edit (or "Keyjazz") mode on or off \\
+\key{Home/End}   & Just try them \\
+\key{PgUp/PgDn}  & Up/down 16 rows \\
+\key{Ins/Del}    & Insert/delete row on current track 
+                   Hold \key{CTRL} for ALL tracks \\
+ 
+\key{Tab}        & Next track \\
+\key{SHIFT-Tab}  & Previous track \\ 
+\key{CTRL-Tab}   & Change pattern edit viewmode \\
+ 
+\key{ALT-1 $=>$ 0} & Mute/unmute track 1-10 \\
+\key{ALT-F9}     & Mute current track \\
+\key{ALT-F10}    & Solo current track \\
+ 
+\key{keypad +}   & Moves ahead one pattern. \\
+\key{keypad -}   & Moves back one pattern. \\
+\key{SHIFT-keypad +} & Moves ahead one order \\
+\key{SHIFT-keypad -} & Moves back one order \\
+\key{keypad /}   & Octave down. \\
+\key{keypad *}   & Octave up. \\
+ 
+\key{SHIFT-,}    & Select previous instrument. \\
+\key{SHIFT-.}    & Select next instrument. \\
+\key{SHIFT-~}    & Switch between regular and effect-draw mode 
+                   Use \key{Tab} here to switch edit mode \\
+ 
+\key{CTRL-1 $=>$ 0} & Change the step-value in the pattern editor \\
+\key{ALT-`}       & Set previous note's length to distance between 
+                    note and current cursor position \\
+\key{ScrollLock}  & Pattern-follow mode (cursor follows
+                    playback) \\
+\hline
+\end{tablist}
+
+\subsection{Block Functions Keys}
+\begin{tablist}{\keywidth}
+\hline
+\key{CTRL-B}     & Marks the beginning of a select block. \\
+\key{CTRL-E}     & Marks the end of a select block. \\
+\key{CTRL-L}     & Select whole track, pressing it again will select the entire 
+                   pattern. \\
+\key{CTRL-U}     & Unselect block \\
+\key{CTRL-C}     & Copy the selected block to the clipboard. \\
+\key{CTRL-P}     & Copy pattern, paste to next empty pattern, 
+                   and jump to new pattern  \\
+\key{CTRL-V}     & Paste the contents of the clipboard to the cursor location. \\
+\key{CTRL-O}     & Overwrite paste \\
+\key{CTRL-M}     & Merge paste the contents of the clipboard with the contents 
+                   of the location you're pasting to. \\
+\key{CTRL-X}     & Cut the selected block. (remove and copy to clipboard) \\
+\key{CTRL-Z}     & Clear block (hold this one) \\
+ 
+\key{CTRL-N}     & Set length of first row of block to length of block \\
+\key{CTRL-W}     & Clear unused volumes \\
+\key{CTRL-I}     & Interpolate effect data thru block \\
+\key{CTRL-T}     & Set all effect and effect data fields of block to same value
+                   as first row in block\\
+\key{CTRL-K}     & Interpolate volume (block) \\
+\key{ALT-Q}      & Transpose block up \\
+\key{ALT-A}      & Transpose block down \\
+\key{CTRL-J}     & Popup scale volume window (10-200 \%) \\
+\key{CTRL-`}     & Set all note's lengths in selection to distance 
+                   between note and next note \\
+\key{ALT-S}      & Set instruments in block to current instrument \\
+\key{SHIFT-move} & Block selection (movements are arrows and \key{PgUp}/\key{PgDn}) \\
+\hline
+\end{tablist}
+
+\subsection{Instrument Editor Keys}
+\begin{tablist}{\keywidth}
+\hline
+\key{ALT-1 $=>$ 1}   & Quick selects midi device \\
+\key{CTRL-1 $=>$ 9}  & Quick selects midi channel \\
+\key{ALT-T}          & Toggle tracker mode on/off \\
+\key{Mouse-2}        & Focus a slider \\
+\hline
+\end{tablist}
+
+\subsection{Order Editor Keys}
+\begin{tablist}{\keywidth}
+\hline
+\key{SHIFT-keypad +} & Moves current order ahead \\
+\key{SHIFT-keypad -} & Moves current order back \\
+\hline
+\end{tablist}
+
+\subsection{Global Keys}
+\begin{tablist}{\keywidth}
+\hline
+\key{F1}         & Quick Help \\
+\key{F2}         & Pattern editor - Pressing \key{F2} again while in the pattern 
+                   editing screen brings up the pattern settings. \\
+\key{F3}         & Instrument editor \\
+\key{F4}         & Arpeggio editor \\
+\key{CTRL-F4}    & Midimacro editor \\
+\key{F10}        & Song message editor \\
+\key{F5}         & Song play (\key{F5} PatternDisplay widget, 
+                   \key{Left}-\key{Right}/\key{Space}/\key{ALT-1} thru \key{ALT-0}/\key{ALT-F9}/\key{ALT-F10})  \\
+\key{F6}         & Pattern Play - will play the current pattern being edited. \\
+\key{F7}         & Start the song at the current row -  
+              If in the pattern edit mode, \key{F7} will start at the current 
+              row, at the first instance of the pattern in the pattern 
+              order.  If in the pattern order screen, \key{F7} will start the 
+              song at the cursor position (by pattern).  \\
+\key{SHIFT-F11}  & Set current order \\
+\key{SHIFT-F7}   & Play song from the current order  \\
+\key{F8}         & Stop playback  \\
+\key{F9}         & Panic (all midi-off/\key{SHIFT-F9} performs a hard driver panic) \\
+\key{CTRL-F9}    & Load Song... \\
+\key{CTRL-F10}   & Save Song As... \\
+\key{F11}        & Song Configuration and Order editor \\
+\key{F12}        & System Configuration (midi dev select)  \\
+\key{ALT-F12}    & About  \\
+\key{CTRL-S}     & Save Song \\
+\key{CTRL-ALT-N} & New Song \\
+\key{ALT-P}      & Song Duration \\
+\key{CTRL-ALT-Q} & Quit \\
+\hline
+\end{tablist}
+
+\subsection{User Interface Keys}
+\begin{tablist}{\keywidth}
+\hline
+\key{Up/Down}    & Cycles through widgets \\
+\key{Tab}        & Cycles forwards through widgets \\
+\key{SHIFT-Tab}  & Cycles backwards through widgets \\
+\key{Enter}      & Confirms choice \\
+\key{Space}      & Toggles an option or clicks a button \\
+ 
+\key{Sliders}    & If you hold \key{CTRL} while using \key{Left}/\key{Right} the slider
+                   will move in bigger steps \\
+\key{Listboxes}  & \key{Up}/\key{Down} scroll, \key{Space} toggles select-items in a list box \\
+\key{Popups}     & \key{Esc} closes, all other UI keys apply \\
+\hline
+\end{tablist}
+
+
+\section{Pages}
+\notyet{}
+
+\section{Editing Song}
+\notyet{}
+
+\section{Editing Tracks}
+\notyet{}
+
+\section{Loading}
+Pressing \key{CTRL-F9} switches to the load page.  Here you may select a file for
+loading.  Press \key{Enter}, or click twice on the file you wish to load.  If you
+have edited the song currently in memory, you will be asked if you wish to lose
+those edits.  \ztracker{} loads \fname{.zt} files.  Further if the file you select
+has the \fname{.it} extension, \ztracker{} will try to import it as an
+Impulse Tracker song.  \sectionref{sec:importing_it_songs}
+
+\section{Saving}
+Pressing \key{CTRL-F10} switches to the save page.  Here you may select a
+directory and file name for your song file.  Find the correct directory by using the
+cursor keys and \key{Tab} to cycle through the windows (or use the mouse).  Then
+enter the desired file name into the text box below the file name selector, and
+press \key{Enter} to save. If the file already exists, you will be asked if you
+wish to overwrite the previous file.    You can also select an already existing
+file by selecting it as in the load page. \\
+There are two boxes just below the file name text box, selecting if a 
+\fname{.zt} file or a \fname{.mid} file shall be created.  This must always be
+\fname{.zt} for \ztracker{} to be able to load the resulting file. Selecting
+\fname{.mid} makes \ztracker{} export a MIDI file.
+\sectionref{sec:exporting_mid_files} 
+
+% eof
