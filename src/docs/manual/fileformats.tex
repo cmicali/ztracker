@@ -1,0 +1,417 @@
+%/*************************************************************************
+% *
+% * FILE  fileformats.tex
+% * $Id: fileformats.tex,v 1.13 2001/09/22 20:38:15 tlr Exp $
+% *
+% * DESCRIPTION 
+% *   The File Formats appendix.
+% *
+% * This file is part of ztracker - a tracker-style MIDI sequencer.
+% *
+% * Copyright (c) 2001, Daniel Kahlin <tlr@users.sourceforge.net>
+% * All rights reserved.
+% *
+% * Redistribution and use in source and binary forms, with or without
+% * modification, are permitted provided that the following conditions
+% * are met:
+% * 1. Redistributions of source code must retain the above copyright
+% *    notice, this list of conditions and the following disclaimer.
+% * 2. Redistributions in binary form must reproduce the above copyright
+% *    notice, this list of conditions and the following disclaimer in the
+% *    documentation and/or other materials provided with the distribution.
+% * 3. Neither the names of the copyright holders nor the names of their
+% *    contributors may be used to endorse or promote products derived 
+% *    from this software without specific prior written permission.
+% *
+% * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% * ``AS IS´´ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+% * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR
+% * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+% * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+% * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+% * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+% * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+% * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+% * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+% *
+% ******/
+\chapter{File Formats}
+
+\section{Configuration File Formats}
+\subsection{The \fname{zt.conf} File Format}
+The configuration file \fname{zt.conf} is a text file which contains the settings for
+\ztracker{}.  Normally this is updated when exiting \ztracker{} or when using the
+\fname{ztconf} utility, however in rare cases you may want to edit it yourself
+using a text editor.
+
+\subsubsection{An example \fname{zt.conf}:}
+\begin{verbatim}
+screen_width: 640
+screen_height: 480
+default_pattern_length: 128
+default_instrument_global_volume: 127
+default_highlight_increment: 8
+default_lowlight_increment: 8
+key_repeat: 30
+key_wait: 250
+prebuffer_rows: 8
+default_view_mode: 3
+skin: default
+send_panic_on_stop: no
+midi_in_sync: no
+fullscreen: no
+auto_open_midi: yes
+step_editing: yes
+autoload_ztfile: no
+centered_edit: no
+autoload_ztfile_filename: autoload.zt
+\end{verbatim}
+
+\subsection{The \fname{colors.conf} File Format}
+The configuration file \fname{colors.conf} is a text file which contains the color
+settings for \ztracker{}.
+
+These entries contain the colors used to draw the beveled \ztracker{} panel.
+\begin{verbatim}
+Background:     #A49054
+Highlight:      #FFDC84
+Lowlight:       #504428
+\end{verbatim}
+%
+Text that goes on the \ztracker{} panel and on muted track names.  
+\begin{verbatim}
+Text:           #000000
+\end{verbatim}
+%
+Text that goes above each track when they are not muted.
+\begin{verbatim}
+Brighttext:     #CFCFCF
+\end{verbatim}
+%
+Colors used for the information boxes at the top of the screen.
+\texttt{Black} is the background color, and \texttt{Data} is the text color.
+\begin{verbatim}
+Data:           #00FF00
+Black:          #000000
+\end{verbatim}
+%
+Colors for the beat display at the bottom left corner of the \ztracker{} window.
+\begin{verbatim}
+LCDHigh:        #FF0000
+LCDMid:         #A00000
+LCDLow:         #600000
+\end{verbatim}
+%
+The color of text that is in the pattern editor and all other boxes except
+the top info boxes.
+\begin{verbatim}
+EditText:       #808080
+\end{verbatim}
+%
+The background color of the pattern editor. \texttt{EditBGlow} on lowlight rows,
+\texttt{EditBGhigh} on highlight rows, and \texttt{EditBG} everywhere else.
+\begin{verbatim}
+EditBG:         #000000
+EditBGlow:      #14100C
+EditBGhigh:     #202014
+\end{verbatim}
+%
+\texttt{SelectedBGLow} is the background color of the pattern editor on a
+selected row which is not on a lowlight or highlight row.  If a selected row
+is on a lowlight or highlight row, \texttt{SelectedBGHigh} is used instead.
+\begin{verbatim}
+SelectedBGLow:  #000080
+SelectedBGHigh: #0000A8
+\end{verbatim}
+%
+\texttt{CursorRowLow} is the background color of the pattern editor on the row
+the cursor is positioned in if it is not a lowlight or highlight row.  If it is
+positioned on a lowlight or highlight row, \texttt{CursorRowHigh} is used instead.
+\begin{verbatim}
+CursorRowLow:   #202020
+CursorRowHigh:  #303030
+\end{verbatim}
+
+\subsubsection{An example \fname{default.colors.conf}:}
+\begin{verbatim}
+Background:     #A49054
+Highlight:      #FFDC84
+Lowlight:       #504428
+Text:           #000000
+Data:           #00FF00
+Black:          #000000
+EditText:       #808080
+EditBG:         #000000
+EditBGlow:      #14100C
+EditBGhigh:     #202014
+Brighttext:     #CFCFCF
+SelectedBGLow:  #000080
+SelectedBGHigh: #0000A8
+LCDHigh:        #FF0000
+LCDMid:         #A00000
+LCDLow:         #600000
+CursorRowHigh:  #303030
+CursorRowLow:   #202020
+\end{verbatim}
+
+\section{Song File Format}
+
+The Song File format is the format \ztracker{} uses to store songs on
+disk.  \ztracker{} song files have the \fname{.zt} extension.  
+
+\subsection{Current Song Format}
+\subsubsection{Song File Header (\texttt{ZThd})}
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZThd")
+0x04  u_int32_t chunk_size
+0x05  u_int8_t  bpm
+0x06  u_int8_t  tpb
+0x07  u_int8_t  max_tracks
+0x08  u_int8_t  flags
+             bit 0: SEND_MIDI_CLOCK
+             bit 1: SEND_MIDI_STOP_START
+             bit 2: FILE_COMPRESSED
+             bit 3: SLIDE_ON_SUBTICK
+             bit 4: SLIDE_PRECISION
+           bit 5-7: UNDEFINED (always set to zero)
+0x09  char      title[26]     
+0x23  <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Pattern Lengths (\texttt{ZTpl})}
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZTpl")
+0x04  u_int32_t chunk_size     (=256 * sizeof(u_int16_t) = 512)
+0x08  u_int16_t pattern_length[256]
+0x208 <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Order List (\texttt{ZTol})}
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZTol")
+0x04  u_int32_t chunk_size     (=256 * sizeof(u_int16_t) = 512)
+0x08  u_int16_t orderlist[256]
+0x208 <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Track Mutes (\texttt{ZTtm})}
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZTtm")
+0x04  u_int32_t chunk_size     (= max_tracks / 8)
+0x08  u_int8_t  track_mutes[max_tracks / 8]
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Instrument (\texttt{ZTin})}
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZTin")
+0x04  u_int32_t chunk_size
+0x08  u_int8_t  inst_number
+0x09  u_int16_t bank
+0x0b  u_int8_t  patch
+0x0c  u_int8_t  midi_device
+0x0d  u_int8_t  channel + (flags << 4)
+0x0e  u_int8_t  default_volume
+0x0f  u_int8_t  global_volume
+0x10  u_int16_t default_length
+0x12  u_int8_t  transpose
+0x13  char title[25]
+0x2c  <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Event List (\texttt{ZTev})}
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZTev")
+0x04  u_int32_t chunk_size
+0x08  <stream of events>
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+The stream of events is encoded as follows:\\
+Each event starts with a command byte (\texttt{u\_int8\_t cmd}).
+If \texttt{cmd} is between \texttt{0x00} and \texttt{0x3f}, the next value is
+an \texttt{u\_int8\_t} (byte event).
+If \texttt{cmd} is between \texttt{0x40} and \texttt{0x7f}, the next value is
+an \texttt{u\_int16\_t} (word event).
+If \texttt{cmd} is between \texttt{0x80} and \texttt{0xbf}, the next value is
+an \texttt{u\_int32\_t} (dword event).
+If \texttt{cmd} is between \texttt{0xc0} and \texttt{0xff}, the next value is
+an \texttt{u\_int16\_t} telling how many string bytes that follow.
+(string event)\\
+
+In the current Song File revision only byte events and word events are used.
+The data first gets set up. After that the data is inserted
+at the appropriate row by issuing the \texttt{0x41} command.
+For each new row, only the data that is actually different
+from the previous row need to be inserted.
+
+\begin{verbatim}
+Byte events:
+  0x01 Note
+  0x02 Instrument
+  0x03 Volume
+  0x04 Effect
+  0x05 Track (default is initially 0)
+  0x06 Pattern (default is initially 0)
+
+Word events:
+  0x41 Insert event at row x
+  0x42 Length
+  0x43 Effect data
+\end{verbatim}
+
+\subsection{New Song Format}
+This is intended as a new format completely replacing the old format
+for introduction somewhere before \ztracker{} 1.0.   Parts of this
+specification will under a transitional period be used together
+with the old format header.
+
+\subsubsection{Song File Header (\texttt{ZTHD})}
+(to be defined)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ZTHD")
+0x04  u_int32_t chunk_size
+0x08  u_int16_t name_len        | <= short string
+0x0a  char      name[name_len]  | (not 0 terminated)
+<to be defined>
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Song Message (\texttt{SMSG})}
+(new as of \ztracker{} 0.94)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="SMSG")
+0x04  u_int32_t chunk_size
+0x08  u_int32_t song_message_len                  | <= long string
+0x0c  char      song_message[<song_message_len>]  | (not 0 terminated)
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Arpeggio (\texttt{ARPG})}
+(new as of \ztracker{} 0.94)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="ARPG")
+0x04  u_int32_t chunk_size
+0x08  u_int16_t number
+0x0a  u_int16_t name_len          | <= short string
+0x0c  char      name[<name_len>]  | (not 0 terminated)
+0x0c  u_int16_t length
+0x0c  u_int8_t  num_cc
+0x0c  u_int16_t speed
+0x0c  u_int16_t repeat_pos
+0x0c  u_int8_t  cc[<num_cc>]
+0x0c  u_int16_t pitch[<num_entries>]
+0x0c  u_int8_t  ccval[<num_cc>][<num_entries>]
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Midi Macro (\texttt{MMAC})}
+(new as of \ztracker{} 0.94)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="MMAC")
+0x04  u_int32_t chunk_size
+0x08  u_int16_t number
+0x0a  u_int16_t name_len          | <= short string
+0x0c  char      name[<name_len>]  | (not 0 terminated)
+0x0c + name_len  u_int16_t num_entries
+0x0e + name_len  u_int16_t mididata[<num_entries>]
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Pattern (\texttt{PATT})}
+(to be defined)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="PATT")
+0x04  u_int32_t chunk_size
+0x08  u_int16_t number
+0x0a  u_int16_t name_len          | <= short string
+0x0c  char      name[<name_len>]  | (not 0 terminated)
+<to be defined>
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Instrument (\texttt{INST})}
+(to be defined)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="INST")
+0x04  u_int32_t chunk_size
+0x08  u_int16_t number
+0x0a  u_int16_t name_len          | <= short string
+0x0c  char      name[<name_len>]  | (not 0 terminated)
+<to be defined>
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Track Mutes (\texttt{TMUT})}
+(to be defined)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="TMUT")
+0x04  u_int32_t chunk_size
+<to be defined>
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\subsubsection{Song File Order List (\texttt{OLST})}
+(to be defined)
+\begin{verbatim}
+0x00  char      chunk_name[4]  (="OLST")
+0x04  u_int32_t chunk_size
+0x0c + name_len  u_int16_t num_entries
+0x0e + name_len  u_int16_t order[<num_entries>]
+0x08 + chunk_size <next chunk>
+\end{verbatim}
+
+\section{Skin File Format}
+\emph{NOTE: This format is no longer in use.  This section is provided only for the sake of
+completeness.} \\
+Skin files are containers for a group of files, much like zip archives.  An application
+can load a contained file from a skin file by refering to its file name.
+In \ztracker{} skin files are use to contain graphics data which \ztracker{} needs.
+
+Each file to be contained in the skin is encoded according to the following scheme and
+then concatenated together to form a skin file.  The encoding is split into two parts,
+the \emph{header}, and the \emph{payload}. 
+All data in the header is stored in little endian order. (i.e the least
+significant byte is always first)  
+
+Each entry begins with the header.
+First is the name of the contained file. \texttt{namelen} is the length of
+the name, and \texttt{name} is the actual name without a trailing 0:
+\begin{verbatim}
+0x00          u_int32_t namelen
+0x04          char name[namelen]
+\end{verbatim}
+%
+Then follows the offset in bytes from the beginning of the skin file to where
+the payload begins:
+\begin{verbatim}
+0x04+namelen  u_int32_t dataoffset           
+\end{verbatim}
+%
+After that follows the uncompressed size, which is the size of the payload will be
+after decompression:
+\begin{verbatim}
+0x08+namelen  u_int32_t realsize
+\end{verbatim}
+%
+Then follows the compressed size, which is the size of the payload before decompression:
+\begin{verbatim}
+0x0c+namelen  u_int32_t compressedsize
+\end{verbatim}
+%
+After that follows a flag which tells us if the payload is compressed.
+If \texttt{compressedflag} is 0 the payload is uncompressed.
+If \texttt{compressedflag} is 1 the payload is compressed.
+\begin{verbatim}
+0x10+namelen  u_int32_t compressedflag
+\end{verbatim}
+%
+Last follows the payload.  If \texttt{compressedflag} is 1 this must be encoded in
+a way compliant with the zlib specification algorithm~\cite{ZlibSpec}.
+If \texttt{compressedflag} is 0 this is just a copy of the whole file.
+\begin{verbatim}
+dataoffset    char payload[compressedsize]
+\end{verbatim}
+%
+
+% eof
