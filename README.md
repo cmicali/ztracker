@@ -5,6 +5,20 @@ zTracker is a win32 only MIDI tracker/sequencer modeled after Impulse Tracker.
 The original developer ( @cmicali ) no longer maintains this project, and the source is archived here.
 
 
+## Features
+
+1:1 copy of Impulse Tracker interface
+64 track sequencer with variable 32-256 rows/pattern, 256 total patterns
+easy use of multiple machines across multiple MIDI devices/interfaces
+rock solid timing that tested as good as cubase (3/496ppqn error)
+load/save compressed .zt files
+volume/effect curve drawing in pattern editor
+IT importing (thanks to lipid)
+auto sync via midi-clock
+.mid export
+intelligent midi-in w/ slave to external sync
+planned: realtime pattern player (a-la-rebirth)
+
 
 ## Old building instructions by Daniel Kahlin
 
