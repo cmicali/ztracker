@@ -29,7 +29,7 @@ zTracker for Mac on GitHub ("maintained" a.k.a. severely unfinished by @esaruoho
 
 ### Building ztracker
 
-Written by Daniel Kahlin <tlr@users.sourceforge.net>
+Written by Daniel Kahlin
 
 Required software:
 - Microsoft Visual Studio C++ 6.0
