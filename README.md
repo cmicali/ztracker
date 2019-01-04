@@ -19,6 +19,11 @@ auto sync via midi-clock
 intelligent midi-in w/ slave to external sync
 planned: realtime pattern player (a-la-rebirth)
 
+## Links
+
+zTracker on SourceForge: http://ztracker.sourceforge.net
+zTracker prime on GitHub (maintained by @m6502): https://github.com/m6502/ztrackerprime
+zTracker for Mac on GitHub ("maintained" a.k.a. severely unfinished by @esaruoho): http://github.com/esaruoho/ztracker_mac/tree/master/skins
 
 ## Old building instructions by Daniel Kahlin
 
