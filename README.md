@@ -1,5 +1,4 @@
 ## zTracker
-========
 
 zTracker is a win32 only MIDI tracker/sequencer modeled after Impulse Tracker. 
 
@@ -7,10 +6,10 @@ The original developer ( @cmicali ) no longer maintains this project, and the so
 
 
 
-### Old building instructions by Daniel Kahlin
+## Old building instructions by Daniel Kahlin
 
-Building ztracker
------------------
+### Building ztracker
+
 Written by Daniel Kahlin <tlr@users.sourceforge.net>
 
 Required software:
@@ -31,13 +30,13 @@ If you want to make modifications to the graphics, you need:
   required devel packages) 
 - Adobe Photoshop or similar for editing the graphics in general.
 
-Building Source Releases
-------------------------
+### Building Source Releases
+
 ztracker's source code is cvs based.  A release is built from the contents of the cvs archive at a point of time.  A release tag is set, the whole cvs tree exported and then
 finally compressed into a .zip file.
 
-Building Binary Releases
-------------------------
+### Building Binary Releases
+
 Binary releases are built from the corresponding source release.
 
 1. From the zt.dsw workspace build zt.exe as release.
